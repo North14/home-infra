@@ -1,0 +1,40 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: cilium
+  namespace: flux-system
+spec:
+  interval: 1h
+  url: https://helm.cilium.io/
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: cilium
+  namespace: flux-system
+spec:
+  interval: 30m
+  # This matches the manual helm install you ran earlier
+  releaseName: cilium
+  targetNamespace: kube-system
+  chart:
+    spec:
+      chart: cilium
+      version: 1.14.x
+      sourceRef:
+        kind: HelmRepository
+        name: cilium
+        namespace: flux-system
+  values:
+    # Must match your K3s requirements
+    k8sServiceHost: "127.0.0.1"
+    k8sServicePort: "6443"
+    kubeProxyReplacement: "strict"
+    operator:
+      replicas: 1
+    hubble:
+      relay:
+        enabled: true
+      ui:
+        enabled: true

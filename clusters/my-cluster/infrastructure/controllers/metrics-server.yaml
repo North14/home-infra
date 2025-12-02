@@ -1,0 +1,33 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: bitnami
+  namespace: flux-system
+spec:
+  interval: 1h
+  url: https://charts.bitnami.com/bitnami
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: metrics-server
+  namespace: flux-system
+spec:
+  interval: 1h
+  targetNamespace: kube-system
+  chart:
+    spec:
+      chart: metrics-server
+      version: 6.x
+      sourceRef:
+        kind: HelmRepository
+        name: bitnami
+        namespace: flux-system
+  values:
+    apiService:
+      create: true
+    # Required for K3s self-signed certs
+    extraArgs:
+      - --kubelet-insecure-tls
+      - --kubelet-preferred-address-types=InternalIP
