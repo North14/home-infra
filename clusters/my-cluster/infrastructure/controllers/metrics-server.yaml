@@ -19,7 +19,7 @@ spec:
   chart:
     spec:
       chart: metrics-server
-      version: 7.4.12
+      version: 7.x
       sourceRef:
         kind: HelmRepository
         name: bitnami
