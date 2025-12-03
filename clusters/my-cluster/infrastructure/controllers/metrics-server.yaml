@@ -4,9 +4,11 @@ kind: HelmRepository
 metadata:
   name: bitnami
   namespace: flux-system
+
 spec:
   interval: 1h
-  url: https://charts.bitnami.com/bitnami
+  type: "oci"
+  url: oci://charts.bitnami.com/bitnami
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
