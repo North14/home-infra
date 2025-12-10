@@ -1,14 +1,4 @@
 ---
-apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
-metadata:
-  name: home-operations
-  namespace: flux-system
-spec:
-  interval: 1h
-  type: "oci"
-  url: oci://ghcr.io/home-operations/charts-mirror
----
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:

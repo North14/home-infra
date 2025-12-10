@@ -1,0 +1,29 @@
+---
+name: Renovate
+
+on: # yamllint disable-line rule:truthy
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */12 * * *"
+
+jobs:
+  renovate:
+    name: Renovate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get token
+        id: get_token
+        uses: actions/create-github-app-token@v1
+        with:
+          private-key: ${{ secrets.private_key }}
+          app-id: ${{ secrets.app_id }}
+          owner: ${{ github.repository_owner }}
+
+      - name: Checkout
+        uses: actions/checkout@v5.0.1
+
+      - name: Self-hosted Renovate
+        uses: renovatebot/github-action@v44.0.5
+        with:
+          configurationFile: example/renovate-config.js
+          token: '${{ steps.get_token.outputs.token }}'
