@@ -1,0 +1,39 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: local-path-provisioner
+  namespace: flux-system
+spec:
+  interval: 1h
+  url: https://github.com/rancher/local-path-provisioner
+  ref:
+    tag: v0.0.32
+
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: local-path-provisioner
+  namespace: kube-system
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: ./deploy/chart/local-path-provisioner
+      sourceRef:
+        kind: GitRepository
+        name: local-path-provisioner
+        namespace: flux-system
+  values:
+    # Common configuration to ensure it works comfortably
+    storageClass:
+      create: true
+      defaultClass: false # Set to true if you want this to be your default
+      name: local-path
+    
+    # If you need to customize the path on the node:
+    nodePathMap:
+      - node: DEFAULT_PATH_FOR_NON_LISTED_NODES
+        paths:
+          - /opt/local-path-provisioner
