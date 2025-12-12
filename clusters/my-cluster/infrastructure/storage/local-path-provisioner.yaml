@@ -14,7 +14,7 @@ spec:
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: local-path-provisioner
+  name: local-path-custom
   namespace: kube-system
 spec:
   interval: 1h
@@ -26,13 +26,11 @@ spec:
         name: local-path-provisioner
         namespace: flux-system
   values:
-    # Common configuration to ensure it works comfortably
     storageClass:
       create: true
-      defaultClass: false # Set to true if you want this to be your default
-      name: local-path
+      defaultClass: false 
+      name: local-path-custom
     
-    # If you need to customize the path on the node:
     nodePathMap:
       - node: DEFAULT_PATH_FOR_NON_LISTED_NODES
         paths:
